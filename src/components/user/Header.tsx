@@ -35,7 +35,7 @@ const Header: React.FC<HeaderProps> = ({ taskCount }) => {
   return (
     <header className="header">
       <Link to="/" className="header__logo">
-        You've got {taskCount} tasks today
+        You've got {taskCount} {taskCount === 1 ? "task" : "tasks"} today
       </Link>
       <div className="header__sub-menu">
         {isAuthenticated ? (

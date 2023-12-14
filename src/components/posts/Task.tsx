@@ -50,7 +50,7 @@ const Task: React.FC<TaskProps> = () => {
           ))}
         </div>
         <div className="plus" onClick={handleModalOpen}>
-          <CiCirclePlus />
+          {isModalOpen == false ? "+" : ""}
         </div>
       </div>
 
@@ -66,7 +66,7 @@ const Task: React.FC<TaskProps> = () => {
                 value={newTask}
                 onChange={handleTaskInputChange}
               />
-              <button onClick={handleAddTask}>+</button>
+              <button onClick={handleAddTask}>Add Task</button>
             </div>
           </div>
         </div>

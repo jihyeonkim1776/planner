@@ -136,25 +136,45 @@ $title-font: 1rem;
 $point-font: 1.25rem;
 $desc-font: 0.75rem;
 $primary-color-font: rgb(249, 243, 243);
+
 @font-face {
   font-family: "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans",
     "Droid Sans", "Helvetica Neue", sans-serif;
 }
+input {
+  background-color: transparent;
+  border: none;
+  outline: none;
+  width: 100%;
+  height: auto;
 
+  resize: none;
+  overflow-y: hidden;
+}
+textarea {
+  background-color: transparent;
+  border: none;
+  outline: none;
+  width: 100%;
+  height: auto;
+  resize: none;
+  overflow-y: hidden;
+}
 body {
   margin: 0;
-
+  font-weight: 600;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 button {
   border: none;
+  display: block;
   font-size: 18px;
   background-color: transparent;
   cursor: pointer;
   height: 100%;
-  margin: 0 auto;
+  margin: 20px auto;
 }
 
 code {
@@ -259,6 +279,14 @@ code {
   }
 }
 
+.goal-section {
+  li {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+}
+
 .photo {
   padding: 10px 40px;
   input {
@@ -316,6 +344,12 @@ code {
 .project-container {
   padding: 10px 20px;
   font-size: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  .title {
+    font-size: 1.25rem;
+    margin: 10px auto;
+  }
   .project {
     display: flex;
     align-items: center;
@@ -334,6 +368,19 @@ code {
   }
 }
 
+.modal-overlay {
+  .modal {
+    max-width: 400px;
+    margin: 0 auto;
+    textarea {
+      width: 100%;
+      height: auto; // Automatically adjust height based on content
+      resize: vertical; // Allow vertical resizing
+      min-height: 100px; // Set a minimum height if needed
+    }
+  }
+}
+
 // #task
 .todo {
   padding: 10px 20px;
@@ -344,6 +391,7 @@ code {
     font-size: 1.25rem;
     margin: 10px auto;
   }
+
   .todo-list {
     display: flex;
     flex-direction: column;
@@ -351,13 +399,20 @@ code {
     .item {
       display: flex;
       width: 400px;
-      max-width: 400px;
       margin: 10px auto;
       align-items: center;
+      justify-content: space-between;
+      input {
+        max-width: 30px;
+      }
       .item__content {
         flex-grow: 1;
       }
     }
+  }
+  .plus {
+    display: flex;
+    justify-content: center;
   }
 }
 
@@ -367,17 +422,38 @@ code {
   display: flex;
   justify-content: space-between;
   text-align: center;
+
   .item {
     display: flex;
     flex-direction: column;
     padding: 10px 5px;
-    background-color: beige;
+    background-color: black;
     .date {
       margin-bottom: 5px;
     }
   }
 }
 
+// #swiper
+.custom-swiper {
+  width: 500px !important; /* Set the width to 500px */
+  position: relative;
+}
+.last-slide {
+  margin-right: 0 !important;
+}
+
+.swiper-scrollbar {
+  display: none !important; /* Hide the Swiper scrollbar */
+}
+
+.swiper-button-prev::after {
+  display: none;
+}
+
+.swiper-button-next::after {
+  display: none;
+}
 // #login
 
 .login-wrapper {
@@ -431,7 +507,9 @@ code {
 .goal-container {
   display: flex;
   align-items: center;
+  justify-content: center;
   flex-direction: column;
+  height: calc(100vh - 200px);
 }
 
 .goal-section {
@@ -459,53 +537,37 @@ code {
 
 // #profile
 .profile__box {
-  background-color: #fff;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  padding: 20px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  max-width: 400px;
-  margin: 0 auto;
-}
-
-.flex__box-lg {
   display: flex;
   align-items: center;
-}
-
-.profile__image {
-  width: 80px;
-  height: 80px;
-  background-color: #ddd;
-  border-radius: 50%;
-  margin-right: 20px;
-}
-
-.profile__info {
-  display: flex;
+  justify-content: center;
   flex-direction: column;
-}
+  height: calc(100vh - 600px);
+  .flex__box-lg {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    .profile__image {
+      width: 120px;
+      height: 120px;
+      background-color: #ddd;
+      border-radius: 50%;
+      margin: 10px;
+    }
+    .profile__info {
+      display: flex;
+      flex-direction: column;
+      .profile__email {
+        font-size: 16px;
+        color: #333;
+      }
 
-.profile__email {
-  font-size: 16px;
-  color: #333;
-}
-
-.profile__name {
-  font-size: 20px;
-  font-weight: bold;
-  color: #333;
-  margin-top: 5px;
-}
-
-.profile__logout {
-  cursor: pointer;
-  margin-top: 20px;
-  font-size: 18px;
-  color: #e74c3c;
-  transition: color 0.3s;
-
-  &:hover {
-    color: #c0392b;
+      .profile__name {
+        font-size: 20px;
+        font-weight: bold;
+        color: #333;
+        margin-top: 5px;
+      }
+    }
   }
 }

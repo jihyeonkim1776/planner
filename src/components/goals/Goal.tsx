@@ -140,12 +140,14 @@ const Goal = () => {
           {monthlyGoals.map((todo, index) => (
             <li key={index}>
               {todo}
-              <button onClick={() => handleEditTodo("monthly", index)}>
-                <LuEraser />
-              </button>
-              <button onClick={() => handleDeleteTodo("monthly", index)}>
-                <FaRegTrashAlt />
-              </button>
+              <div className="detail-button">
+                <button onClick={() => handleEditTodo("monthly", index)}>
+                  <LuEraser />
+                </button>
+                <button onClick={() => handleDeleteTodo("monthly", index)}>
+                  <FaRegTrashAlt />
+                </button>
+              </div>
             </li>
           ))}
         </ul>

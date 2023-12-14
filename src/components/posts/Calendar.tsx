@@ -39,18 +39,20 @@ const Calendar = () => {
       slidesPerView={5}
       navigation
       pagination={{ clickable: true }}
-      scrollbar={{ draggable: true }}
       initialSlide={initialSlide - 2}
+      scrollbar={{ draggable: true }}
+      className="custom-swiper"
     >
       {calendarData.map((item, index) => (
         <SwiperSlide key={index}>
           <div
             style={{
-              border: "1px solid #ddd",
               padding: "10px",
               textAlign: "center",
               fontSize: "0.75rem",
               width: "40px",
+              backgroundColor: "black",
+              color: "white",
             }}
           >
             <div>{item.formattedDate}</div>

@@ -131,15 +131,30 @@ table {
 a {
   text-decoration: none;
 }
+$primary-color: linear-gradient(90deg, #efd5ff 0%, #515ada 100%);
+$title-font: 1rem;
+$point-font: 1.25rem;
+$desc-font: 0.75rem;
+$primary-color-font: rgb(249, 243, 243);
+@font-face {
+  font-family: "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans",
+    "Droid Sans", "Helvetica Neue", sans-serif;
+}
 
 body {
   margin: 0;
 
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+button {
+  border: none;
+  font-size: 18px;
+  background-color: transparent;
+  cursor: pointer;
+  height: 100%;
+  margin: 0 auto;
 }
 
 code {
@@ -159,12 +174,17 @@ code {
 .header {
   display: flex;
   justify-content: space-between;
+  font-size: $point-font;
   padding: 10px 40px;
   align-items: center;
+
   min-height: 200px;
   background: linear-gradient(90deg, #efd5ff 0%, #515ada 100%);
   border-bottom-left-radius: 15%;
   border-bottom-right-radius: 15%;
+  &__logo {
+    max-width: 400px;
+  }
 }
 
 // #home
@@ -178,6 +198,10 @@ code {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 10px;
+  p {
+    font-size: $title-font;
+    color: $primary-color-font;
+  }
   div {
     width: 25vh;
     height: 15vh;
@@ -215,18 +239,78 @@ code {
 }
 
 // #dream
-.text-group {
-  border-bottom: 2px solid gray;
+.goal-content {
   padding: 10px 40px;
-  &__title {
-    font-size: 1.3rem;
-    margin: 20px auto;
+  .text-group__title {
+    margin-bottom: 10px;
   }
-  &__description {
-    line-height: 1.4;
-    font-size: 0.75rem;
+  textarea {
+    background-color: transparent;
+    border: none;
+    outline: none;
+    width: 100%;
+    height: auto;
+    min-height: 300px;
+    resize: none;
+    overflow-y: hidden;
+    .textarea-focused::placeholder {
+      color: transparent;
+    }
   }
 }
+
+.photo {
+  padding: 10px 40px;
+  input {
+    display: none;
+  }
+}
+.photo-container {
+  padding: 30px 40px;
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(200px, 1fr)
+  ); /* Adjust the minmax width as needed */
+  gap: 20px; /* Adjust the gap between items as needed */
+
+  .photo-item {
+    position: relative;
+
+    img {
+      width: 100%;
+      object-fit: cover; /* Use cover to maintain aspect ratio */
+      height: 200px; /* Set a fixed height for consistency */
+
+      &:hover + .overlay {
+        display: flex;
+      }
+    }
+
+    .overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.7);
+
+      button {
+        display: block;
+        color: black;
+        background: none;
+        border: 1px solid black;
+        padding: 5px;
+        cursor: pointer;
+        margin: 5px;
+      }
+    }
+  }
+}
+
 // #project
 
 .project-container {
@@ -284,14 +368,144 @@ code {
   justify-content: space-between;
   text-align: center;
   .item {
-    font-size: 0.75rem;
     display: flex;
     flex-direction: column;
-    width: 50px;
     padding: 10px 5px;
     background-color: beige;
     .date {
       margin-bottom: 5px;
     }
+  }
+}
+
+// #login
+
+.login-wrapper {
+  max-width: 300px;
+  margin: 100px auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+
+  h2 {
+    margin: 10px;
+    text-align: center;
+    color: #515ada;
+    font-size: $title-font;
+    font-weight: 500;
+  }
+  .form__block {
+    margin: 10px;
+    font-size: $desc-font;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+
+    label {
+      margin-bottom: 10px;
+    }
+
+    input {
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      margin: 5px;
+    }
+
+    button {
+      margin-top: 10px;
+      padding: 10px;
+      background: $primary-color;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      width: 100%;
+    }
+  }
+}
+
+// Goal
+.goal-container {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+.goal-section {
+  margin: 20px auto 30px;
+  text-align: center;
+
+  ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  .input-container {
+    margin-top: 10px;
+    display: none; // Initially, hide the input container
+  }
+
+  .input-container.visible {
+    display: block; // Show the input container when it has the "visible" class
+  }
+
+  button {
+    margin-top: 20px;
+  }
+}
+
+// #profile
+.profile__box {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.flex__box-lg {
+  display: flex;
+  align-items: center;
+}
+
+.profile__image {
+  width: 80px;
+  height: 80px;
+  background-color: #ddd;
+  border-radius: 50%;
+  margin-right: 20px;
+}
+
+.profile__info {
+  display: flex;
+  flex-direction: column;
+}
+
+.profile__email {
+  font-size: 16px;
+  color: #333;
+}
+
+.profile__name {
+  font-size: 20px;
+  font-weight: bold;
+  color: #333;
+  margin-top: 5px;
+}
+
+.profile__logout {
+  cursor: pointer;
+  margin-top: 20px;
+  font-size: 18px;
+  color: #e74c3c;
+  transition: color 0.3s;
+
+  &:hover {
+    color: #c0392b;
   }
 }

@@ -7,9 +7,8 @@ export default function TodoPage() {
   return (
     <>
       {" "}
-      <Calendar />
-      <Project />
       <Task />
+      <Project />
     </>
   );
 }

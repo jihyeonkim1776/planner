@@ -8,22 +8,30 @@ const HomePage = () => {
         <div className="menu">
           <div className="menu__mind-set">
             <Link to="/dream">
-              <button>Dream Life</button>
+              <button>
+                <p>Dream Life</p>
+              </button>
             </Link>
           </div>
           <div className="menu__todo">
             <Link to="/todo">
-              <button>todo</button>
+              <button>
+                <p>Todo</p>
+              </button>
             </Link>
           </div>
           <div className="menu__goal">
             <Link to="/goal">
-              <button>Goals</button>
+              <button>
+                <p>Goals</p>
+              </button>
             </Link>
           </div>
           <div className="menu__profile">
             <Link to="/profile">
-              <button>profile</button>
+              <button>
+                <p>Profile</p>
+              </button>
             </Link>
           </div>
         </div>

@@ -1,4 +1,5 @@
 import Dream from "components/dream/Dream";
+import PhotoGallery from "components/dream/PhotoGallery";
 
 import React from "react";
 
@@ -6,7 +7,7 @@ const DreamPage = () => {
   return (
     <>
       <Dream />
-      <div>DreamPage</div>
+      <PhotoGallery />
     </>
   );
 };

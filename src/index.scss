@@ -131,14 +131,15 @@ table {
 a {
   text-decoration: none;
 }
+
 $point-color: linear-gradient(90deg, #efd5ff 0%, #515ada 100%);
 $primary-color: #ccc;
 $neutral-color: #242932;
 $second-color: #82bbff;
 
-$title-font: 0.75rem;
-$point-font: 1rem;
-$desc-font: 0.6rem;
+$title-font: 0.9rem;
+$point-font: 1.2rem;
+$desc-font: 0.75rem;
 $primary-color-font: rgb(249, 243, 243);
 
 @font-face {
@@ -432,6 +433,7 @@ code {
   padding: 10px 20px;
   display: flex;
   flex-direction: column;
+  align-items: center;
 
   .title {
     font-size: $title-font;
@@ -445,13 +447,18 @@ code {
     .item {
       display: flex;
       width: 300px;
-      max-width: 340px;
+      max-width: 350px;
       margin: 10px auto;
       align-items: center;
       justify-content: space-between;
       font-size: $desc-font;
       input {
+        max-width: 100%;
+        font-size: $desc-font;
+      }
+      input[type="checkbox"] {
         max-width: 30px;
+        font-size: $desc-font;
       }
 
       .item__content {
@@ -485,7 +492,8 @@ code {
     margin: 10px auto;
     display: block;
     padding: 10px;
-    width: 80%; // Adjust the width as needed
+    width: 100%; // Set the width to 100%
+    max-width: 300px; // Set a maximum width if needed
     font-size: $desc-font;
   }
 
@@ -545,9 +553,8 @@ code {
   h2 {
     margin: 10px;
     text-align: center;
-    color: #515ada;
-    font-size: $title-font;
-    font-weight: 500;
+    color: $point-color;
+    font-size: $point-font;
   }
   .form__block {
     margin: 10px;
@@ -559,19 +566,23 @@ code {
     flex-direction: column;
 
     label {
-      margin-bottom: 10px;
+      margin-bottom: 5px;
+      font-size: $title-font;
     }
 
     input {
       padding: 10px;
       border: 1px solid #ccc;
       border-radius: 15px;
+      box-sizing: border-box;
       margin: 5px;
+      font-size: $desc-font;
     }
 
     button {
       margin-top: 10px;
       padding: 10px;
+      box-sizing: border-box;
       background: $primary-color;
       color: white;
       border: none;

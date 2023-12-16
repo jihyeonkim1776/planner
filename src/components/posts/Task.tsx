@@ -23,7 +23,7 @@ const Task: React.FC<TaskProps> = () => {
   const [newTask, setNewTask] = useState<string>("");
   const [taskList, setTaskList] = useState<string[]>([]);
   const { user } = useContext(AuthContext);
-
+  const [editIndex, setEditIndex] = useState<number | null>(null);
   const handleModalOpen = () => {
     setIsModalOpen((prevIsModalOpen) => !prevIsModalOpen);
   };

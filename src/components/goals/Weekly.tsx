@@ -1,12 +1,14 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { IoIosNotifications } from "react-icons/io";
-import { IoIosRemoveCircleOutline } from "react-icons/io";
+import {
+  IoIosRemoveCircleOutline,
+  IoMdCheckmarkCircleOutline,
+} from "react-icons/io";
 import AuthContext from "context/AuthContext";
 import {
   addDoc,
   collection,
   updateDoc,
-  doc,
   getDocs,
   where,
   query,
@@ -19,6 +21,7 @@ const Weekly: React.FC<WeeklyProps> = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newWeekly, setNewWeekly] = useState<string>("");
   const [WeeklyList, setWeeklyList] = useState<string[]>([]);
+  const [editIndex, setEditIndex] = useState<number | null>(null); // Track the index of the item being edited
   const { user } = useContext(AuthContext);
 
   const handleModalOpen = () => {
@@ -105,6 +108,49 @@ const Weekly: React.FC<WeeklyProps> = () => {
     }
   };
 
+  const handleEditTask = (index: number) => {
+    setNewWeekly(WeeklyList[index]); // Set the text to be edited
+    setEditIndex(index); // Set the index of the item being edited
+  };
+
+  const handleCompleteEdit = async () => {
+    if (editIndex !== null && newWeekly.trim() !== "") {
+      const updatedWeeklyList = [...WeeklyList];
+      updatedWeeklyList[editIndex] = newWeekly;
+
+      try {
+        // Check if the user has an existing document
+        const q = query(
+          collection(db, "Weeklys"),
+          where("uid", "==", user?.uid)
+        );
+        const querySnapshot = await getDocs(q);
+
+        if (querySnapshot.size > 0) {
+          // If the user has an existing document, update it
+          const docRef = querySnapshot.docs[0].ref;
+
+          await updateDoc(docRef, {
+            content: updatedWeeklyList,
+            updatedAt: new Date()?.toLocaleDateString("ko", {
+              hour: "2-digit",
+              minute: "2-digit",
+              second: "2-digit",
+            }),
+            email: user?.email,
+            uid: user?.uid,
+          });
+        }
+
+        setWeeklyList(updatedWeeklyList);
+        setNewWeekly("");
+        setEditIndex(null);
+      } catch (error) {
+        console.error("Error completing edit:", error);
+      }
+    }
+  };
+
   const handleRemoveTask = async (index: number) => {
     const updatedWeeklyList = [...WeeklyList];
     updatedWeeklyList.splice(index, 1);
@@ -127,8 +173,9 @@ const Weekly: React.FC<WeeklyProps> = () => {
       }
 
       setWeeklyList(updatedWeeklyList);
+      setEditIndex(null); // Reset edit index when removing an item
     } catch (error) {
-      console.error("Error removing weekly task:", error);
+      console.error("Error removing Weekly task:", error);
     }
   };
 
@@ -153,6 +200,7 @@ const Weekly: React.FC<WeeklyProps> = () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
   return (
     <div>
       <div className="todo">
@@ -161,7 +209,23 @@ const Weekly: React.FC<WeeklyProps> = () => {
           {WeeklyList.map((Weekly, index) => (
             <div key={index} className="item">
               <input type="checkbox" name="" id="" />
-              <div className="item__content">{Weekly}</div>
+              {editIndex === index ? (
+                <>
+                  <input
+                    type="text"
+                    value={newWeekly}
+                    onChange={(e) => setNewWeekly(e.target.value)}
+                  />
+                  <IoMdCheckmarkCircleOutline onClick={handleCompleteEdit} />
+                </>
+              ) : (
+                <div
+                  className="item__content"
+                  onClick={() => handleEditTask(index)}
+                >
+                  {Weekly}
+                </div>
+              )}
               <div className="item__detail">
                 <IoIosNotifications />
                 <IoIosRemoveCircleOutline
@@ -188,7 +252,7 @@ const Weekly: React.FC<WeeklyProps> = () => {
                   value={newWeekly}
                   onChange={handleWeeklyInputChange}
                 />
-                <button type="submit">Add </button>
+                <button type="submit">Add</button>
               </div>
             </div>
           </div>

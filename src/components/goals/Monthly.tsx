@@ -1,12 +1,14 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { IoIosNotifications } from "react-icons/io";
-import { IoIosRemoveCircleOutline } from "react-icons/io";
+import {
+  IoIosRemoveCircleOutline,
+  IoMdCheckmarkCircleOutline,
+} from "react-icons/io";
 import AuthContext from "context/AuthContext";
 import {
   addDoc,
   collection,
   updateDoc,
-  doc,
   getDocs,
   where,
   query,
@@ -18,7 +20,8 @@ interface MonthlyProps {}
 const Monthly: React.FC<MonthlyProps> = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newMonthly, setNewMonthly] = useState<string>("");
-  const [MonthlyList, setMonthlyList] = useState<string[]>([]);
+  const [monthlyList, setMonthlyList] = useState<string[]>([]);
+  const [editIndex, setEditIndex] = useState<number | null>(null); // Track the index of the item being edited
   const { user } = useContext(AuthContext);
 
   const handleModalOpen = () => {
@@ -56,11 +59,15 @@ const Monthly: React.FC<MonthlyProps> = () => {
     e.preventDefault();
 
     if (newMonthly.trim() !== "") {
-      const updatedMonthlyList = [...MonthlyList, newMonthly];
+      const updatedMonthlyList = [...monthlyList, newMonthly];
 
       try {
         // Check if the user has an existing document
-        const querySnapshot = await getDocs(collection(db, "Monthlys"));
+        const q = query(
+          collection(db, "Monthlys"),
+          where("uid", "==", user?.uid)
+        );
+        const querySnapshot = await getDocs(q);
 
         if (querySnapshot.size > 0) {
           // If the user has an existing document, update it
@@ -100,8 +107,52 @@ const Monthly: React.FC<MonthlyProps> = () => {
       }
     }
   };
+
+  const handleEditTask = (index: number) => {
+    setNewMonthly(monthlyList[index]); // Set the text to be edited
+    setEditIndex(index); // Set the index of the item being edited
+  };
+
+  const handleCompleteEdit = async () => {
+    if (editIndex !== null && newMonthly.trim() !== "") {
+      const updatedMonthlyList = [...monthlyList];
+      updatedMonthlyList[editIndex] = newMonthly;
+
+      try {
+        // Check if the user has an existing document
+        const q = query(
+          collection(db, "Monthlys"),
+          where("uid", "==", user?.uid)
+        );
+        const querySnapshot = await getDocs(q);
+
+        if (querySnapshot.size > 0) {
+          // If the user has an existing document, update it
+          const docRef = querySnapshot.docs[0].ref;
+
+          await updateDoc(docRef, {
+            content: updatedMonthlyList,
+            updatedAt: new Date()?.toLocaleDateString("ko", {
+              hour: "2-digit",
+              minute: "2-digit",
+              second: "2-digit",
+            }),
+            email: user?.email,
+            uid: user?.uid,
+          });
+        }
+
+        setMonthlyList(updatedMonthlyList);
+        setNewMonthly("");
+        setEditIndex(null);
+      } catch (error) {
+        console.error("Error completing edit:", error);
+      }
+    }
+  };
+
   const handleRemoveTask = async (index: number) => {
-    const updatedMonthlyList = [...MonthlyList];
+    const updatedMonthlyList = [...monthlyList];
     updatedMonthlyList.splice(index, 1);
 
     try {
@@ -125,10 +176,12 @@ const Monthly: React.FC<MonthlyProps> = () => {
       }
 
       setMonthlyList(updatedMonthlyList);
+      setEditIndex(null); // Reset edit index when removing an item
     } catch (error) {
       console.error("Error removing monthly task:", error);
     }
   };
+
   const modalRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -150,15 +203,32 @@ const Monthly: React.FC<MonthlyProps> = () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
   return (
     <div>
       <div className="todo">
         <div className="title">Monthly</div>
         <div className="todo-list">
-          {MonthlyList.map((Monthly, index) => (
+          {monthlyList.map((monthly, index) => (
             <div key={index} className="item">
               <input type="checkbox" name="" id="" />
-              <div className="item__content">{Monthly}</div>
+              {editIndex === index ? (
+                <>
+                  <input
+                    type="text"
+                    value={newMonthly}
+                    onChange={(e) => setNewMonthly(e.target.value)}
+                  />
+                  <IoMdCheckmarkCircleOutline onClick={handleCompleteEdit} />
+                </>
+              ) : (
+                <div
+                  className="item__content"
+                  onClick={() => handleEditTask(index)}
+                >
+                  {monthly}
+                </div>
+              )}
               <div className="item__detail">
                 <IoIosNotifications />
                 <IoIosRemoveCircleOutline

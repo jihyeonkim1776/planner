@@ -58,7 +58,9 @@ const Header: React.FC<HeaderProps> = ({ taskCount }) => {
           {isAuthenticated ? (
             <button onClick={handleSignOut}>Sign out</button>
           ) : (
-            <Link to="/login">Log in</Link>
+            <button>
+              <Link to="/login">Log in</Link>
+            </button>
           )}
           <Link to="/profile">
             <button>Profile</button>

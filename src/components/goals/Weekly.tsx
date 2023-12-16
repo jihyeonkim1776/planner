@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { IoIosNotifications } from "react-icons/io";
-import { useTask } from "context/TaskContext";
-import Calendar from "./Calendar";
+
 import AuthContext from "context/AuthContext";
 import {
   addDoc,
@@ -14,56 +13,65 @@ import {
 } from "firebase/firestore";
 import { db } from "firebaseApp";
 
-interface TaskProps {}
+interface WeeklyProps {}
 
-const Task: React.FC<TaskProps> = () => {
-  const { taskCount, setTaskCount } = useTask();
+const Weekly: React.FC<WeeklyProps> = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [newTask, setNewTask] = useState<string>("");
-  const [taskList, setTaskList] = useState<string[]>([]);
+  const [newWeekly, setNewWeekly] = useState<string>("");
+  const [WeeklyList, setWeeklyList] = useState<string[]>([]);
   const { user } = useContext(AuthContext);
 
   const handleModalOpen = () => {
     setIsModalOpen((prevIsModalOpen) => !prevIsModalOpen);
   };
 
-  const fetchTasks = async () => {
-    try {
-      const q = query(collection(db, "tasks"), where("uid", "==", user?.uid));
-      const querySnapshot = await getDocs(q);
+  const fetchWeeklys = async () => {
+    if (user) {
+      try {
+        const q = query(
+          collection(db, "Weeklys"),
+          where("uid", "==", user.uid)
+        );
+        const querySnapshot = await getDocs(q);
 
-      if (querySnapshot.size > 0) {
-        const tasksData = querySnapshot.docs[0].data();
-        setTaskList(tasksData.content);
-        setTaskCount(tasksData.content.length);
+        if (querySnapshot.size > 0) {
+          const WeeklysData = querySnapshot.docs[0].data();
+          setWeeklyList(WeeklysData.content);
+        }
+      } catch (error) {
+        console.error("Error fetching Weeklys:", error);
       }
-    } catch (error) {
-      console.error("Error fetching tasks:", error);
     }
   };
 
   useEffect(() => {
-    fetchTasks();
+    fetchWeeklys();
   }, []);
 
-  const handleTaskInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setNewTask(e.target.value);
+  const handleWeeklyInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setNewWeekly(e.target.value);
   };
 
-  const handleAddTask = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleAddWeekly = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (newTask.trim() !== "") {
-      const updatedTaskList = [...taskList, newTask];
+    if (newWeekly.trim() !== "") {
+      const updatedWeeklyList = [...WeeklyList, newWeekly];
 
       try {
-        const q = query(collection(db, "tasks"), where("uid", "==", user?.uid));
+        // Check if the user has an existing document
+        const q = query(
+          collection(db, "Weeklys"),
+          where("uid", "==", user?.uid)
+        );
         const querySnapshot = await getDocs(q);
+
         if (querySnapshot.size > 0) {
           // If the user has an existing document, update it
           const docRef = querySnapshot.docs[0].ref;
+
           await updateDoc(docRef, {
-            content: updatedTaskList,
+            content: updatedWeeklyList,
             updatedAt: new Date()?.toLocaleDateString("ko", {
               hour: "2-digit",
               minute: "2-digit",
@@ -74,8 +82,8 @@ const Task: React.FC<TaskProps> = () => {
           });
         } else {
           // If the user doesn't have an existing document, add a new one
-          const docRef = await addDoc(collection(db, "tasks"), {
-            content: updatedTaskList,
+          const docRef = await addDoc(collection(db, "Weeklys"), {
+            content: updatedWeeklyList,
             createdAt: new Date()?.toLocaleDateString("ko", {
               hour: "2-digit",
               minute: "2-digit",
@@ -85,28 +93,26 @@ const Task: React.FC<TaskProps> = () => {
             uid: user?.uid,
           });
 
-          console.log("Task added to Firestore with ID:", docRef.id);
+          console.log("Weekly added to Firestore with ID:", docRef.id);
         }
 
-        setTaskList(updatedTaskList);
-        setNewTask("");
+        setWeeklyList(updatedWeeklyList);
+        setNewWeekly("");
         setIsModalOpen(false);
-        setTaskCount(updatedTaskList.length - 1 + 1);
       } catch (error) {
-        console.error("Error adding/updating task:", error);
+        console.error("Error adding/updating Weekly:", error);
       }
     }
   };
-
   return (
     <div>
       <div className="todo">
-        <div className="title">Task</div>
+        <div className="title">Weekly</div>
         <div className="todo-list">
-          {taskList.map((task, index) => (
+          {WeeklyList.map((Weekly, index) => (
             <div key={index} className="item">
               <input type="checkbox" name="" id="" />
-              <div className="item__content">{task}</div>
+              <div className="item__content">{Weekly}</div>
               <div className="item__detail">
                 <IoIosNotifications />
               </div>
@@ -119,7 +125,7 @@ const Task: React.FC<TaskProps> = () => {
       </div>
 
       {isModalOpen && (
-        <form className="post-form" onSubmit={handleAddTask}>
+        <form className="post-form" onSubmit={handleAddWeekly}>
           <div className="modal-overlay">
             <div className="modal">
               <div className="modal-header"></div>
@@ -127,10 +133,10 @@ const Task: React.FC<TaskProps> = () => {
                 <input
                   type="text"
                   placeholder="할 일을 입력하세요"
-                  value={newTask}
-                  onChange={handleTaskInputChange}
+                  value={newWeekly}
+                  onChange={handleWeeklyInputChange}
                 />
-                <button type="submit">Add Task</button>
+                <button type="submit">Add Weekly</button>
               </div>
             </div>
           </div>
@@ -140,4 +146,4 @@ const Task: React.FC<TaskProps> = () => {
   );
 };
 
-export default Task;
+export default Weekly;

@@ -14,7 +14,7 @@ const Calendar = () => {
     // 과거 날짜 추가
     for (let i = daysInPast; i > 0; i--) {
       const date = subDays(currentDate, i);
-      const formattedDate = format(date, "MM-dd");
+      const formattedDate = format(date, "dd");
       const dayOfWeek = format(date, "EE");
       calendarData.push({ formattedDate, dayOfWeek });
     }
@@ -22,7 +22,7 @@ const Calendar = () => {
     // 현재 날짜부터 미래 날짜 추가
     for (let i = 0; i < daysToShow; i++) {
       const date = addDays(currentDate, i);
-      const formattedDate = format(date, "MM-dd");
+      const formattedDate = format(date, "dd");
       const dayOfWeek = format(date, "EE");
       calendarData.push({ formattedDate, dayOfWeek });
     }

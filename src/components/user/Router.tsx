@@ -1,7 +1,7 @@
 import HomePage from "pages/home";
 import LoginPage from "pages/login";
 import ProfilePage from "pages/profile";
-import { Route, Routes, Navigate } from "react-router-dom";
+import { Route, Routes, Navigate, useParams } from "react-router-dom";
 import TodoPage from "pages/todo";
 import DreamPage from "pages/dream";
 import GoalPage from "pages/goals";
@@ -12,6 +12,8 @@ interface RouterProps {
 }
 
 export default function Router({ isAuthenticated }: RouterProps) {
+  const param = useParams();
+  console.log(param);
   return (
     <>
       <Routes>

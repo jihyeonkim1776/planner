@@ -14,6 +14,7 @@
     "date-fns": "^2.30.0",
     "firebase": "^10.7.1",
     "react": "^18.2.0",
+    "react-calendar": "^4.7.0",
     "react-date-range": "^1.4.0",
     "react-dom": "^18.2.0",
     "react-icons": "^4.12.0",
@@ -24,6 +25,7 @@
     "sass": "^1.69.5",
     "swiper": "^11.0.5",
     "typescript": "^4.4.2",
+    "uuid": "^9.0.1",
     "web-vitals": "^2.1.0"
   },
   "scripts": {
@@ -52,6 +54,7 @@
   },
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
-    "@types/react-date-range": "^1.4.9"
+    "@types/react-date-range": "^1.4.9",
+    "@types/uuid": "^9.0.7"
   }
 }

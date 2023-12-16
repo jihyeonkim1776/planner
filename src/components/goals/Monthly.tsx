@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { IoIosNotifications } from "react-icons/io";
-import { useTask } from "context/TaskContext";
-import Calendar from "./Calendar";
+
 import AuthContext from "context/AuthContext";
 import {
   addDoc,
@@ -14,56 +13,61 @@ import {
 } from "firebase/firestore";
 import { db } from "firebaseApp";
 
-interface TaskProps {}
+interface MonthlyProps {}
 
-const Task: React.FC<TaskProps> = () => {
-  const { taskCount, setTaskCount } = useTask();
+const Monthly: React.FC<MonthlyProps> = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [newTask, setNewTask] = useState<string>("");
-  const [taskList, setTaskList] = useState<string[]>([]);
+  const [newMonthly, setNewMonthly] = useState<string>("");
+  const [MonthlyList, setMonthlyList] = useState<string[]>([]);
   const { user } = useContext(AuthContext);
 
   const handleModalOpen = () => {
     setIsModalOpen((prevIsModalOpen) => !prevIsModalOpen);
   };
 
-  const fetchTasks = async () => {
-    try {
-      const q = query(collection(db, "tasks"), where("uid", "==", user?.uid));
-      const querySnapshot = await getDocs(q);
+  const fetchMonthlys = async () => {
+    if (user) {
+      try {
+        const q = query(
+          collection(db, "Monthlys"),
+          where("uid", "==", user.uid)
+        );
+        const querySnapshot = await getDocs(q);
 
-      if (querySnapshot.size > 0) {
-        const tasksData = querySnapshot.docs[0].data();
-        setTaskList(tasksData.content);
-        setTaskCount(tasksData.content.length);
+        if (querySnapshot.size > 0) {
+          const MonthlysData = querySnapshot.docs[0].data();
+          setMonthlyList(MonthlysData.content);
+        }
+      } catch (error) {
+        console.error("Error fetching Monthlys:", error);
       }
-    } catch (error) {
-      console.error("Error fetching tasks:", error);
     }
   };
 
   useEffect(() => {
-    fetchTasks();
+    fetchMonthlys();
   }, []);
 
-  const handleTaskInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setNewTask(e.target.value);
+  const handleMonthlyInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setNewMonthly(e.target.value);
   };
 
-  const handleAddTask = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleAddMonthly = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (newTask.trim() !== "") {
-      const updatedTaskList = [...taskList, newTask];
+    if (newMonthly.trim() !== "") {
+      const updatedMonthlyList = [...MonthlyList, newMonthly];
 
       try {
-        const q = query(collection(db, "tasks"), where("uid", "==", user?.uid));
-        const querySnapshot = await getDocs(q);
+        // Check if the user has an existing document
+        const querySnapshot = await getDocs(collection(db, "Monthlys"));
+
         if (querySnapshot.size > 0) {
           // If the user has an existing document, update it
           const docRef = querySnapshot.docs[0].ref;
+
           await updateDoc(docRef, {
-            content: updatedTaskList,
+            content: updatedMonthlyList,
             updatedAt: new Date()?.toLocaleDateString("ko", {
               hour: "2-digit",
               minute: "2-digit",
@@ -74,8 +78,8 @@ const Task: React.FC<TaskProps> = () => {
           });
         } else {
           // If the user doesn't have an existing document, add a new one
-          const docRef = await addDoc(collection(db, "tasks"), {
-            content: updatedTaskList,
+          const docRef = await addDoc(collection(db, "Monthlys"), {
+            content: updatedMonthlyList,
             createdAt: new Date()?.toLocaleDateString("ko", {
               hour: "2-digit",
               minute: "2-digit",
@@ -85,15 +89,14 @@ const Task: React.FC<TaskProps> = () => {
             uid: user?.uid,
           });
 
-          console.log("Task added to Firestore with ID:", docRef.id);
+          console.log("Monthly added to Firestore with ID:", docRef.id);
         }
 
-        setTaskList(updatedTaskList);
-        setNewTask("");
+        setMonthlyList(updatedMonthlyList);
+        setNewMonthly("");
         setIsModalOpen(false);
-        setTaskCount(updatedTaskList.length - 1 + 1);
       } catch (error) {
-        console.error("Error adding/updating task:", error);
+        console.error("Error adding/updating Monthly:", error);
       }
     }
   };
@@ -101,12 +104,12 @@ const Task: React.FC<TaskProps> = () => {
   return (
     <div>
       <div className="todo">
-        <div className="title">Task</div>
+        <div className="title">Monthly</div>
         <div className="todo-list">
-          {taskList.map((task, index) => (
+          {MonthlyList.map((Monthly, index) => (
             <div key={index} className="item">
               <input type="checkbox" name="" id="" />
-              <div className="item__content">{task}</div>
+              <div className="item__content">{Monthly}</div>
               <div className="item__detail">
                 <IoIosNotifications />
               </div>
@@ -119,7 +122,7 @@ const Task: React.FC<TaskProps> = () => {
       </div>
 
       {isModalOpen && (
-        <form className="post-form" onSubmit={handleAddTask}>
+        <form className="post-form" onSubmit={handleAddMonthly}>
           <div className="modal-overlay">
             <div className="modal">
               <div className="modal-header"></div>
@@ -127,10 +130,10 @@ const Task: React.FC<TaskProps> = () => {
                 <input
                   type="text"
                   placeholder="할 일을 입력하세요"
-                  value={newTask}
-                  onChange={handleTaskInputChange}
+                  value={newMonthly}
+                  onChange={handleMonthlyInputChange}
                 />
-                <button type="submit">Add Task</button>
+                <button type="submit">Add Monthly</button>
               </div>
             </div>
           </div>
@@ -140,4 +143,4 @@ const Task: React.FC<TaskProps> = () => {
   );
 };
 
-export default Task;
+export default Monthly;

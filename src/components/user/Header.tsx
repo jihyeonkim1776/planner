@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useTask } from "context/TaskContext";
 import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 import { app } from "firebaseApp";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 interface HeaderProps {
   taskCount: number;
@@ -13,6 +13,7 @@ const Header: React.FC<HeaderProps> = ({ taskCount }) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(
     !!auth?.currentUser
   );
+  const navigate = useNavigate();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -35,7 +36,11 @@ const Header: React.FC<HeaderProps> = ({ taskCount }) => {
   return (
     <header className="header">
       <Link to="/" className="header__logo">
-        You've got {taskCount} {taskCount === 1 ? "task" : "tasks"} today
+        {isAuthenticated
+          ? `You've got ${taskCount} ${
+              taskCount === 1 ? "task" : "tasks"
+            } today`
+          : "Welcome"}
       </Link>
       <div className="header__sub-menu">
         {isAuthenticated ? (

@@ -6,6 +6,10 @@ import TodoPage from "pages/todo";
 import DreamPage from "pages/dream";
 import GoalPage from "pages/goals";
 import SignupPage from "pages/signup";
+import StatementPage from "pages/statement";
+import Wealth from "components/statement/Wealth";
+import Confidence from "components/statement/Confidence";
+import MemoryPage from "pages/memory";
 
 interface RouterProps {
   isAuthenticated: boolean;
@@ -21,8 +25,11 @@ export default function Router({ isAuthenticated }: RouterProps) {
           <>
             <Route path="/" element={<HomePage />} />
             <Route path="/todo" element={<TodoPage />} />
-
+            <Route path="/memory" element={<MemoryPage />} />
             <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/statement" element={<StatementPage />} />
+            <Route path="/statement/wealth" element={<Wealth />} />
+            <Route path="/statement/confidence" element={<Confidence />} />
             <Route path="/dream" element={<DreamPage />} />
             <Route path="/goal" element={<GoalPage />} />
             <Route path="*" element={<Navigate replace to="/" />} />

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useTask } from "context/TaskContext";
 import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 import { app } from "firebaseApp";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 interface HeaderProps {
   taskCount: number;
@@ -14,7 +14,6 @@ const Header: React.FC<HeaderProps> = ({ taskCount }) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(
     !!auth?.currentUser
   );
-  const navigate = useNavigate();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {

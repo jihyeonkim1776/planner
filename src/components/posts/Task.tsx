@@ -2,13 +2,11 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import { IoIosNotifications } from "react-icons/io";
 import { IoIosRemoveCircleOutline } from "react-icons/io";
 import { useTask } from "context/TaskContext";
-import Calendar from "./Calendar";
 import AuthContext from "context/AuthContext";
 import {
   addDoc,
   collection,
   updateDoc,
-  doc,
   getDocs,
   where,
   query,
@@ -23,7 +21,6 @@ const Task: React.FC<TaskProps> = () => {
   const [newTask, setNewTask] = useState<string>("");
   const [taskList, setTaskList] = useState<string[]>([]);
   const { user } = useContext(AuthContext);
-  const [editIndex, setEditIndex] = useState<number | null>(null);
   const handleModalOpen = () => {
     setIsModalOpen((prevIsModalOpen) => !prevIsModalOpen);
   };

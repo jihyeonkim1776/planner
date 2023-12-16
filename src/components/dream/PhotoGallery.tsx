@@ -15,15 +15,23 @@ interface PhotoGalleryProps {}
 
 const PhotoGallery: React.FC<PhotoGalleryProps> = () => {
   const [images, setImages] = useState<string[]>([]);
+  const [activeIndex, setActiveIndex] = useState<number | null>(null); // Track the active image index
   const auth = getAuth(app);
   const user = auth.currentUser;
   const storageRef = user ? ref(storage, `images/${user.uid}`) : undefined!;
+
   const handleImageChange = (index: number): void => {
     console.log(`Change image at index ${index}`);
+    setActiveIndex(null); // Close the active image on change
   };
 
   const handleImageRemove = (index: number): void => {
     setImages((prevImages) => prevImages.filter((_, i) => i !== index));
+    setActiveIndex(null); // Close the active image on remove
+  };
+
+  const handleImageClick = (index: number): void => {
+    setActiveIndex((prevIndex) => (prevIndex === index ? null : index)); // Toggle the active image on click
   };
 
   const fetchImages = async (): Promise<void> => {
@@ -47,6 +55,7 @@ const PhotoGallery: React.FC<PhotoGalleryProps> = () => {
       fetchImages();
     }
   }, [user]);
+
   const handleImageUpload = async (
     e: ChangeEvent<HTMLInputElement>
   ): Promise<void> => {
@@ -58,23 +67,20 @@ const PhotoGallery: React.FC<PhotoGalleryProps> = () => {
 
         const imageRef = ref(storageRef, uniqueFilename);
         const uploadTask = uploadBytesResumable(imageRef, file);
-        // Listen for state changes, errors, and completion of the upload.
+
         uploadTask.on(
           "state_changed",
           (snapshot) => {
-            // Handle progress, if needed
             const progress =
               (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
             console.log(`Upload is ${progress}% done`);
           },
           (error) => {
-            // Handle unsuccessful uploads
             console.error("Error uploading image:", error);
           },
           () => {
-            // Handle successful uploads on complete
             console.log("Upload successful");
-            fetchImages(); // Fetch images again after uploading a new image
+            fetchImages();
           }
         );
       } catch (error) {
@@ -97,23 +103,19 @@ const PhotoGallery: React.FC<PhotoGalleryProps> = () => {
           <IoMdPhotos />
         </label>
         <div className="photo-container">
-          {/* Reverse the images array to display the most recent images first */}
-          {images
-            .slice()
-            // .reverse()
-            .map((imageUrl, index) => (
-              <div key={index} className="photo-item">
-                <img src={imageUrl} alt={`Photo ${index + 1}`} />
-                <div className="overlay">
-                  <button onClick={() => handleImageChange(index)}>
-                    Change
-                  </button>
-                  <button onClick={() => handleImageRemove(index)}>
-                    Remove
-                  </button>
-                </div>
+          {images.map((imageUrl, index) => (
+            <div
+              key={index}
+              className={`photo-item ${activeIndex === index ? "active" : ""}`}
+              onClick={() => handleImageClick(index)}
+            >
+              <img src={imageUrl} alt={`Photo ${index + 1}`} />
+              <div className="overlay">
+                <button onClick={() => handleImageChange(index)}>Change</button>
+                <button onClick={() => handleImageRemove(index)}>Remove</button>
               </div>
-            ))}
+            </div>
+          ))}
         </div>
       </div>
     </div>

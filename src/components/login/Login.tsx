@@ -4,7 +4,9 @@ import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { app } from "firebaseApp";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
+import { useTask } from "context/TaskContext";
 const Login = () => {
+  const { setTaskCount } = useTask();
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [error, setError] = useState<string>("");
@@ -16,6 +18,9 @@ const Login = () => {
     try {
       const auth = getAuth(app);
       await signInWithEmailAndPassword(auth, email, password);
+
+      // 로그인 성공 시 taskCount 초기화
+      setTaskCount(0);
 
       toast.success("로그인에 성공했습니다.");
       navigate("/");

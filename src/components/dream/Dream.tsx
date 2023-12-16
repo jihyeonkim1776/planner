@@ -129,18 +129,19 @@ export default function Dream() {
   return (
     <div>
       <div className="goal-content">
-        <div className="text-group__title">1. The Dream Life</div>
-        <form className="post-form" onSubmit={onSubmit}>
-          <textarea
-            name="content"
-            onChange={onChange}
-            value={content}
-            className="textarea-focused"
-            placeholder="Write your post here..."
-          />
-
-          <button type="submit">Submit</button>
-        </form>
+        <div className="text-group">
+          <div className="text-group__title">The Dream Life</div>
+          <form className="post-form" onSubmit={onSubmit}>
+            <textarea
+              name="content"
+              onChange={onChange}
+              value={content}
+              className="textarea-focused"
+              placeholder="Write your post here..."
+            />
+            <button type="submit">save</button>
+          </form>
+        </div>
       </div>
     </div>
   );

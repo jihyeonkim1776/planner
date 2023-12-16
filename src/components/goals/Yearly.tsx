@@ -1,6 +1,6 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { IoIosNotifications } from "react-icons/io";
-
+import { IoIosRemoveCircleOutline } from "react-icons/io";
 import AuthContext from "context/AuthContext";
 import {
   addDoc,
@@ -104,7 +104,54 @@ const Yearly: React.FC<YearlyProps> = () => {
       }
     }
   };
+  const handleRemoveTask = async (index: number) => {
+    const updatedYearlyList = [...YearlyList];
+    updatedYearlyList.splice(index, 1);
 
+    try {
+      const q = query(collection(db, "Yearlys"), where("uid", "==", user?.uid));
+      const querySnapshot = await getDocs(q);
+      if (querySnapshot.size > 0) {
+        const docRef = querySnapshot.docs[0].ref;
+        await updateDoc(docRef, {
+          content: updatedYearlyList,
+          updatedAt: new Date()?.toLocaleDateString("ko", {
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+          }),
+          email: user?.email,
+          uid: user?.uid,
+        });
+      }
+
+      setYearlyList(updatedYearlyList);
+    } catch (error) {
+      console.error("Error removing yearly task:", error);
+    }
+  };
+
+  const modalRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        modalRef.current &&
+        !modalRef.current.contains(event.target as Node)
+      ) {
+        // Clicked outside the modal, close it
+        setIsModalOpen(false);
+      }
+    };
+
+    // Attach the event listener
+    document.addEventListener("mousedown", handleClickOutside);
+
+    // Detach the event listener when the component unmounts
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
   return (
     <div>
       <div className="todo">
@@ -116,6 +163,9 @@ const Yearly: React.FC<YearlyProps> = () => {
               <div className="item__content">{Yearly}</div>
               <div className="item__detail">
                 <IoIosNotifications />
+                <IoIosRemoveCircleOutline
+                  onClick={() => handleRemoveTask(index)}
+                />
               </div>
             </div>
           ))}
@@ -128,7 +178,7 @@ const Yearly: React.FC<YearlyProps> = () => {
       {isModalOpen && (
         <form className="post-form" onSubmit={handleAddYearly}>
           <div className="modal-overlay">
-            <div className="modal">
+            <div className="modal" ref={modalRef}>
               <div className="modal-header"></div>
               <div className="modal-content">
                 <input
@@ -137,7 +187,7 @@ const Yearly: React.FC<YearlyProps> = () => {
                   value={newYearly}
                   onChange={handleYearlyInputChange}
                 />
-                <button type="submit">Add Yearly</button>
+                <button type="submit">Add</button>
               </div>
             </div>
           </div>

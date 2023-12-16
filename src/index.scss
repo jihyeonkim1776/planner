@@ -131,10 +131,14 @@ table {
 a {
   text-decoration: none;
 }
-$primary-color: linear-gradient(90deg, #efd5ff 0%, #515ada 100%);
-$title-font: 1rem;
-$point-font: 1.25rem;
-$desc-font: 0.75rem;
+$point-color: linear-gradient(90deg, #efd5ff 0%, #515ada 100%);
+$primary-color: #ccc;
+$neutral-color: #242932;
+$second-color: #82bbff;
+
+$title-font: 0.75rem;
+$point-font: 1rem;
+$desc-font: 0.6rem;
 $primary-color-font: rgb(249, 243, 243);
 
 @font-face {
@@ -170,10 +174,9 @@ body {
 button {
   border: none;
   display: block;
-  font-size: 18px;
+  font-size: $title-font;
   background-color: transparent;
   cursor: pointer;
-  height: 100%;
   margin: 20px auto;
 }
 
@@ -184,10 +187,16 @@ code {
 
 .layout {
   border: solid 2px aqua;
-  max-width: 600px;
+  max-width: 1000px;
   margin: 0 auto;
+
   position: relative;
   min-height: 100vh;
+}
+
+.inner {
+  padding: 0 20px;
+  box-sizing: border-box;
 }
 
 // #header
@@ -195,15 +204,28 @@ code {
   display: flex;
   justify-content: space-between;
   font-size: $point-font;
-  padding: 10px 40px;
   align-items: center;
-
+  width: 100%;
   min-height: 200px;
-  background: linear-gradient(90deg, #efd5ff 0%, #515ada 100%);
+  background: $neutral-color;
   border-bottom-left-radius: 15%;
   border-bottom-right-radius: 15%;
   &__logo {
     max-width: 400px;
+    font-size: 1.25rem;
+    color: $primary-color;
+    margin-bottom: 50px;
+  }
+  &__sub-menu {
+    display: flex;
+    width: 150px;
+    justify-content: flex-end; /* Change the flex direction to justify-content */
+    align-items: center; /* Align items to the center */
+    flex-direction: row-reverse;
+  }
+
+  &__sub-menu button {
+    color: $primary-color;
   }
 }
 
@@ -220,28 +242,19 @@ code {
   gap: 10px;
   p {
     font-size: $title-font;
-    color: $primary-color-font;
+    color: $primary-color;
+    font-weight: 700;
   }
   div {
-    width: 25vh;
-    height: 15vh;
-    border-radius: 13px;
+    width: 45vw;
+    height: 30vw;
+    border-radius: 15px;
   }
-  &__mind-set {
-    background: linear-gradient(90deg, #efd5ff 0%, #515ada 100%);
-    background-size: cover;
-  }
-  &__todo {
-    background: linear-gradient(90deg, #efd5ff 0%, #515ada 100%);
-    background-size: cover;
-  }
-  &__goal {
-    background: linear-gradient(90deg, #efd5ff 0%, #515ada 100%);
-    background-size: cover;
-  }
+  &__mind-set,
+  &__todo,
+  &__goal,
   &__profile {
-    background: linear-gradient(90deg, #efd5ff 0%, #515ada 100%);
-    background-size: cover;
+    background: $neutral-color;
   }
 
   button {
@@ -260,37 +273,56 @@ code {
 
 // #dream
 .goal-content {
-  padding: 10px 40px;
-  .text-group__title {
+  padding: 0 20px;
+  margin-top: 25px;
+  .text-group {
+    display: flex;
+    flex-direction: column;
     margin-bottom: 10px;
-  }
-  textarea {
-    background-color: transparent;
-    border: none;
-    outline: none;
-    width: 100%;
-    height: auto;
-    min-height: 300px;
-    resize: none;
-    overflow-y: hidden;
-    .textarea-focused::placeholder {
-      color: transparent;
+
+    .text-group__title {
+      margin-bottom: 10px;
+      font-size: $title-font;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+
+      textarea {
+        background-color: transparent;
+        border: none;
+        outline: none;
+        width: 100%;
+        height: auto;
+        min-height: 300px;
+        resize: none;
+        overflow-y: hidden;
+        font-size: $desc-font;
+
+        &.textarea-focused::placeholder {
+          color: transparent;
+        }
+      }
+
+      button {
+        align-self: flex-end; // Align the button to the end of the flex container
+        margin-top: 10px; // Adjust the margin as needed
+        border: 1px solid gray;
+        border-radius: 15px;
+        padding: 5px 7px;
+      }
     }
   }
 }
 
-.goal-section {
-  li {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-  }
-}
-
 .photo {
-  padding: 10px 40px;
+  padding: 10px 20px;
   input {
     display: none;
+  }
+  .custom-file-upload {
+    font-size: $title-font;
   }
 }
 .photo-container {
@@ -347,7 +379,7 @@ code {
   display: flex;
   flex-direction: column;
   .title {
-    font-size: 1.25rem;
+    font-size: $title-font;
     margin: 10px auto;
   }
   .project {
@@ -364,21 +396,35 @@ code {
       padding: 10px;
       border-radius: 15px;
       text-align: center;
+      font-size: $title-font;
     }
   }
 }
 
 .modal-overlay {
   .modal {
-    max-width: 400px;
+    max-width: 300px;
     margin: 0 auto;
+    font-size: $desc-font;
     textarea {
       width: 100%;
       height: auto; // Automatically adjust height based on content
       resize: vertical; // Allow vertical resizing
-      min-height: 100px; // Set a minimum height if needed
+      min-height: 50px; // Set a minimum height if needed
+    }
+    .date {
+      font-size: $desc-font;
     }
   }
+}
+
+.todo-page-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 50px;
+  // Adjust the height as needed
 }
 
 // #task
@@ -388,7 +434,7 @@ code {
   flex-direction: column;
 
   .title {
-    font-size: 1.25rem;
+    font-size: $title-font;
     margin: 10px auto;
   }
 
@@ -398,21 +444,53 @@ code {
 
     .item {
       display: flex;
-      width: 400px;
+      width: 300px;
+      max-width: 340px;
       margin: 10px auto;
       align-items: center;
       justify-content: space-between;
+      font-size: $desc-font;
       input {
         max-width: 30px;
       }
+
       .item__content {
         flex-grow: 1;
       }
+
+      .item__detail {
+        display: flex;
+        align-items: center;
+
+        svg {
+          margin-right: 5px;
+        }
+      }
     }
   }
-  .plus {
-    display: flex;
-    justify-content: center;
+}
+.plus {
+  display: flex;
+  justify-content: center;
+  font-size: 24px;
+  color: $second-color;
+}
+
+.modal-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  input {
+    margin: 10px auto;
+    display: block;
+    padding: 10px;
+    width: 80%; // Adjust the width as needed
+    font-size: $desc-font;
+  }
+
+  button {
+    margin-top: 10px;
   }
 }
 
@@ -428,6 +506,7 @@ code {
     flex-direction: column;
     padding: 10px 5px;
     background-color: black;
+
     .date {
       margin-bottom: 5px;
     }
@@ -461,7 +540,7 @@ code {
   margin: 100px auto;
   padding: 20px;
   border: 1px solid #ccc;
-  border-radius: 8px;
+  border-radius: 15px;
 
   h2 {
     margin: 10px;
@@ -486,7 +565,7 @@ code {
     input {
       padding: 10px;
       border: 1px solid #ccc;
-      border-radius: 4px;
+      border-radius: 15px;
       margin: 5px;
     }
 
@@ -496,7 +575,7 @@ code {
       background: $primary-color;
       color: white;
       border: none;
-      border-radius: 4px;
+      border-radius: 15px;
       cursor: pointer;
       width: 100%;
     }
@@ -541,12 +620,13 @@ code {
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  height: calc(100vh - 600px);
+  margin-top: 50px;
   .flex__box-lg {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    text-align: center;
     .profile__image {
       width: 120px;
       height: 120px;
@@ -558,14 +638,14 @@ code {
       display: flex;
       flex-direction: column;
       .profile__email {
-        font-size: 16px;
-        color: #333;
+        font-size: $title-font;
+        color: $neutral-color;
       }
 
       .profile__name {
-        font-size: 20px;
+        font-size: $title-font;
         font-weight: bold;
-        color: #333;
+        color: $neutral-color;
         margin-top: 5px;
       }
     }

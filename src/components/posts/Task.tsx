@@ -1,5 +1,6 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { IoIosNotifications } from "react-icons/io";
+import { IoIosRemoveCircleOutline } from "react-icons/io";
 import { useTask } from "context/TaskContext";
 import Calendar from "./Calendar";
 import AuthContext from "context/AuthContext";
@@ -35,6 +36,7 @@ const Task: React.FC<TaskProps> = () => {
       if (querySnapshot.size > 0) {
         const tasksData = querySnapshot.docs[0].data();
         setTaskList(tasksData.content);
+        // Update the task count correctly
         setTaskCount(tasksData.content.length);
       }
     } catch (error) {
@@ -43,7 +45,11 @@ const Task: React.FC<TaskProps> = () => {
   };
 
   useEffect(() => {
-    fetchTasks();
+    const fetchData = async () => {
+      await fetchTasks();
+    };
+
+    fetchData();
   }, []);
 
   const handleTaskInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -97,7 +103,54 @@ const Task: React.FC<TaskProps> = () => {
       }
     }
   };
+  const handleRemoveTask = async (index: number) => {
+    const updatedTaskList = [...taskList];
+    updatedTaskList.splice(index, 1);
 
+    try {
+      const q = query(collection(db, "tasks"), where("uid", "==", user?.uid));
+      const querySnapshot = await getDocs(q);
+      if (querySnapshot.size > 0) {
+        const docRef = querySnapshot.docs[0].ref;
+        await updateDoc(docRef, {
+          content: updatedTaskList,
+          updatedAt: new Date()?.toLocaleDateString("ko", {
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+          }),
+          email: user?.email,
+          uid: user?.uid,
+        });
+      }
+
+      setTaskList(updatedTaskList);
+      setTaskCount(updatedTaskList.length);
+    } catch (error) {
+      console.error("Error removing task:", error);
+    }
+  };
+  const modalRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        modalRef.current &&
+        !modalRef.current.contains(event.target as Node)
+      ) {
+        // Clicked outside the modal, close it
+        setIsModalOpen(false);
+      }
+    };
+
+    // Attach the event listener
+    document.addEventListener("mousedown", handleClickOutside);
+
+    // Detach the event listener when the component unmounts
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
   return (
     <div>
       <div className="todo">
@@ -109,6 +162,9 @@ const Task: React.FC<TaskProps> = () => {
               <div className="item__content">{task}</div>
               <div className="item__detail">
                 <IoIosNotifications />
+                <IoIosRemoveCircleOutline
+                  onClick={() => handleRemoveTask(index)}
+                />
               </div>
             </div>
           ))}
@@ -121,7 +177,7 @@ const Task: React.FC<TaskProps> = () => {
       {isModalOpen && (
         <form className="post-form" onSubmit={handleAddTask}>
           <div className="modal-overlay">
-            <div className="modal">
+            <div className="modal" ref={modalRef}>
               <div className="modal-header"></div>
               <div className="modal-content">
                 <input

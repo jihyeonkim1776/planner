@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState, useEffect, useRef } from "react";
 import { CiCirclePlus } from "react-icons/ci";
 import {
   addDoc,
@@ -110,6 +110,55 @@ const Project: React.FC<ProjectProps> = () => {
 
     fetchProjects();
   }, []); // Run this effect only once on component mount
+  const handleDeleteProject = async (index: number) => {
+    try {
+      const updatedProjects = [...projects];
+      updatedProjects.splice(index, 1);
+
+      const querySnapshot = await getDocs(collection(db, "projects"));
+
+      if (querySnapshot.size > 0) {
+        const docRef = querySnapshot.docs[0].ref;
+
+        await updateDoc(docRef, {
+          projects: updatedProjects,
+          updatedAt: new Date()?.toLocaleDateString("ko", {
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+          }),
+          email: user?.email,
+          uid: user?.uid,
+        });
+      }
+
+      setProjects(updatedProjects);
+    } catch (error) {
+      console.error("Error deleting project:", error);
+    }
+  };
+
+  const modalRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        modalRef.current &&
+        !modalRef.current.contains(event.target as Node)
+      ) {
+        // Clicked outside the modal, close it
+        setIsModalOpen(false);
+      }
+    };
+
+    // Attach the event listener
+    document.addEventListener("mousedown", handleClickOutside);
+
+    // Detach the event listener when the component unmounts
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   return (
     <div className="project-container">
@@ -120,14 +169,19 @@ const Project: React.FC<ProjectProps> = () => {
             <div className="content__name">{project.title}</div>
             <div className="content__duration">{project.date}</div>
             <div className="content__detail">{project.content}</div>
-            <div className="content__delete">x</div>
+            <div
+              className="content__delete"
+              onClick={() => handleDeleteProject(index)}
+            >
+              x
+            </div>
           </div>
         ))}
       </div>
 
       {isModalOpen && (
         <div className="modal-overlay">
-          <div className="modal">
+          <div className="modal" ref={modalRef}>
             <div className="modal-header"></div>
             <label htmlFor="title">Title</label>
             <input
@@ -151,16 +205,15 @@ const Project: React.FC<ProjectProps> = () => {
               name="date"
               value={newProject.date}
               onChange={handleInputChange}
+              className="date"
             />
             <button onClick={handleAddProject}>Add Project</button>
           </div>
         </div>
       )}
-
-      <button onClick={handleModalOpen}>
-        {" "}
+      <div className="plus" onClick={handleModalOpen}>
         {isModalOpen === false ? "+" : ""}
-      </button>
+      </div>
     </div>
   );
 };

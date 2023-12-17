@@ -204,7 +204,7 @@ const Yearly: React.FC<YearlyProps> = () => {
   return (
     <div>
       <div className="todo">
-        <div className="title">Yearly</div>
+        <div className="title">Yearly Goals</div>
         <div className="todo-list">
           {YearlyList.map((Yearly, index) => (
             <div key={index} className="item">

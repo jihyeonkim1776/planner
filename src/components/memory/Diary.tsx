@@ -124,7 +124,7 @@ const Diary: React.FC<DiaryProps> = () => {
     <div>
       <div className="diary">
         {" "}
-        <h1>Diary</h1>
+        <h1>하루 회고하기</h1>
         <Calendar selectedDate={selectedDate} onDateChange={setSelectedDate} />
         <form onSubmit={saveDiaryEntry} className="diary-form">
           <HiOutlineEmojiHappy />

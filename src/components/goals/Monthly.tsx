@@ -207,7 +207,7 @@ const Monthly: React.FC<MonthlyProps> = () => {
   return (
     <div>
       <div className="todo">
-        <div className="title">Monthly</div>
+        <div className="title">Monthly Goals</div>
         <div className="todo-list">
           {monthlyList.map((monthly, index) => (
             <div key={index} className="item">

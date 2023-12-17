@@ -204,7 +204,7 @@ const Weekly: React.FC<WeeklyProps> = () => {
   return (
     <div>
       <div className="todo">
-        <div className="title">Weekly</div>
+        <div className="title">Weekly Goals</div>
         <div className="todo-list">
           {WeeklyList.map((Weekly, index) => (
             <div key={index} className="item">

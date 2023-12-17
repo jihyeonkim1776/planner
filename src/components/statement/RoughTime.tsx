@@ -2,13 +2,13 @@ import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/swiper-bundle.css";
 
-interface ConfidenceProps {
+interface RoughTimeProps {
   affirmations: string[];
 }
 
-const Confidence: React.FC<ConfidenceProps> = ({ affirmations }) => {
+const RoughTime: React.FC<RoughTimeProps> = ({ affirmations }) => {
   return (
-    <div className="confidence">
+    <div className="roughtime">
       <Swiper
         spaceBetween={50}
         slidesPerView={1}
@@ -26,4 +26,4 @@ const Confidence: React.FC<ConfidenceProps> = ({ affirmations }) => {
   );
 };
 
-export default Confidence;
+export default RoughTime;

@@ -6,18 +6,15 @@ import { Link } from "react-router-dom";
 const HomePage = () => {
   return (
     <>
-      <div className="mind-set">
-        <div className="mind-set__statement">
-          <Link to="/statement">
-            <button>
-              <p>긍정확언</p>
-            </button>
-          </Link>
-        </div>
-      </div>
-
       <div className="menu-container">
         <div className="menu">
+          <div className="menu__statement">
+            <Link to="/statement">
+              <button>
+                <p>긍정확언</p>
+              </button>
+            </Link>
+          </div>
           <div className="menu__mind-set">
             <Link to="/dream">
               <button>

@@ -2,13 +2,13 @@ import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/swiper-bundle.css";
 
-interface ConfidenceProps {
+interface SelfProps {
   affirmations: string[];
 }
 
-const Confidence: React.FC<ConfidenceProps> = ({ affirmations }) => {
+const Self: React.FC<SelfProps> = ({ affirmations }) => {
   return (
-    <div className="confidence">
+    <div className="self">
       <Swiper
         spaceBetween={50}
         slidesPerView={1}
@@ -26,4 +26,4 @@ const Confidence: React.FC<ConfidenceProps> = ({ affirmations }) => {
   );
 };
 
-export default Confidence;
+export default Self;

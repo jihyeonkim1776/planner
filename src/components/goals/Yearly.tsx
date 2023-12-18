@@ -4,6 +4,7 @@ import {
   IoIosRemoveCircleOutline,
   IoMdCheckmarkCircleOutline,
 } from "react-icons/io";
+import { CiCircleCheck } from "react-icons/ci";
 import AuthContext from "context/AuthContext";
 import {
   addDoc,
@@ -204,7 +205,7 @@ const Yearly: React.FC<YearlyProps> = () => {
   return (
     <div>
       <div className="todo">
-        <div className="title">Yearly Goals</div>
+        <div className="title">올해의 목표</div>
         <div className="todo-list">
           {YearlyList.map((Yearly, index) => (
             <div key={index} className="item">
@@ -216,7 +217,10 @@ const Yearly: React.FC<YearlyProps> = () => {
                     value={newYearly}
                     onChange={(e) => setNewYearly(e.target.value)}
                   />
-                  <IoMdCheckmarkCircleOutline onClick={handleCompleteEdit} />
+                  <div className="item__detail">
+                    {" "}
+                    <CiCircleCheck onClick={handleCompleteEdit} />
+                  </div>
                 </>
               ) : (
                 <div
@@ -227,7 +231,6 @@ const Yearly: React.FC<YearlyProps> = () => {
                 </div>
               )}
               <div className="item__detail">
-                <IoIosNotifications />
                 <IoIosRemoveCircleOutline
                   onClick={() => handleRemoveTask(index)}
                 />

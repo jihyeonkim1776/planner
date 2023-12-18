@@ -5,6 +5,7 @@ import {
   IoMdCheckmarkCircleOutline,
 } from "react-icons/io";
 import AuthContext from "context/AuthContext";
+import { CiCircleCheck } from "react-icons/ci";
 import {
   addDoc,
   collection,
@@ -204,7 +205,7 @@ const Weekly: React.FC<WeeklyProps> = () => {
   return (
     <div>
       <div className="todo">
-        <div className="title">Weekly Goals</div>
+        <div className="title">이번주 목표</div>
         <div className="todo-list">
           {WeeklyList.map((Weekly, index) => (
             <div key={index} className="item">
@@ -216,7 +217,9 @@ const Weekly: React.FC<WeeklyProps> = () => {
                     value={newWeekly}
                     onChange={(e) => setNewWeekly(e.target.value)}
                   />
-                  <IoMdCheckmarkCircleOutline onClick={handleCompleteEdit} />
+                  <div className="item__detail">
+                    <CiCircleCheck onClick={handleCompleteEdit} />
+                  </div>
                 </>
               ) : (
                 <div
@@ -227,7 +230,6 @@ const Weekly: React.FC<WeeklyProps> = () => {
                 </div>
               )}
               <div className="item__detail">
-                <IoIosNotifications />
                 <IoIosRemoveCircleOutline
                   onClick={() => handleRemoveTask(index)}
                 />

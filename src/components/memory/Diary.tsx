@@ -123,8 +123,6 @@ const Diary: React.FC<DiaryProps> = () => {
   return (
     <div>
       <div className="diary">
-        {" "}
-        <h1>하루 회고하기</h1>
         <Calendar selectedDate={selectedDate} onDateChange={setSelectedDate} />
         <form onSubmit={saveDiaryEntry} className="diary-form">
           <HiOutlineEmojiHappy />
